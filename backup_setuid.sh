@@ -18,4 +18,13 @@ if [ ! -d $1 ]; then
 fi
 
 
-"-----------------------------"
+
+#Buscar ejecutables
+
+
+find "$DIRECTORIO" -type f -perm -4000 -perm -0001 | while read -r archivo; do
+        echo "Analizando archivo: $archivo"
+        if head -n 1 "$archivo" | grep -qE '^#!'; then
+               echo "script encontrado: $archivo"
+        fi
+
