@@ -21,8 +21,8 @@ try:
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
-        KeyName='DevOps_Sysadmin.pemR',
-        SecurityGroups=['default'], 
+        KeyName='DevOps_Sysadmin',
+        SecurityGroups=['DevOps_Obligatorio'], 
         TagSpecifications=[{
             'ResourceType': 'instance',
             'Tags': [{'Key': 'Name', 'Value': 'Maligno-SRV'}]
