@@ -15,11 +15,22 @@ os.environ['AWS_SESSION_TOKEN'] = os.getenv('AWS_SESSION_TOKEN')
 # ------------------ BLOQUE 1: Creacion de instancia EC2 ------------------
 ec2 = boto3.resource('ec2', region_name=os.getenv('AWS_DEFAULT_REGION'))
 
-install_SQL = '''#!/bin/bash
+try:
+    with open('obli.sql', 'r') as f:
+        sql_content = f.read()
+except Exception as e:
+    print(f"Error al leer obli.sql: {e}", file=sys.stderr)
+    sys.exit(1)
+
+install_SQL = f'''#!/bin/bash
 sudo apt update
 sudo apt install -y mysql-server
 sudo systemctl start mysql
 sudo systemctl enable mysql
+
+mysql -u root <<EOF
+{sql_content}
+EOF
 '''
 
 try:
