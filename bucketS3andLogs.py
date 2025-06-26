@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import boto3
+import glob
 import os
 import sys
 from datetime import datetime
@@ -14,17 +15,21 @@ os.environ['AWS_SESSION_TOKEN'] = os.getenv('AWS_SESSION_TOKEN')
 
 # ------------------ BLOQUE 1: Validacion de parámetros ------------------
 
-if len(sys.argv) != 4:
-    print("Uso: python3 subir_a_s3.py <nro_estudiante1> <nro_estudiante2> <ruta_al_archivo>", file=sys.stderr)
+if len(sys.argv) != 3:
+    print("Uso: python3 subir_a_s3.py <nro_estudiante1> <nro_estudiante2>", file=sys.stderr)
     sys.exit(1)
 
 nro1 = sys.argv[1]
 nro2 = sys.argv[2]
-archivo_log = sys.argv[3]
 
-if not os.path.isfile(archivo_log):
-    print(f"Error: El archivo {archivo_log} no existe.", file=sys.stderr)
+backups = glob.glob('Backups*')
+
+if not backups:
+    print("No se encontraron archivos que comiencen con 'Backups'.", file=sys.stderr)
     sys.exit(2)
+
+archivo_log = max(backups, key=os.path.getctime)
+print(f"Archivo más reciente encontrado: {archivo_log}")
 
 # ------------------ BLOQUE 2: Creacion de bucket ------------------
 
