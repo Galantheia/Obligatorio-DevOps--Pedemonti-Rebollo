@@ -23,12 +23,29 @@
 - MySQLandRDS.py
 
 ### Contenido Adicional
--  
+-  obli.sql
+
+---
+
+## Configuraciones Previas Requeridas y Cosas a Tener en Cuenta
+
+ - **AWS Cli**
+
+ - **Boto3**
+
+ - **Cuenta Activa de AWS :** 
+
+ - **Usuario IAM** con permisos de S3, EC2 y RDS o en su defecto
+ 
+ - **Clave EC2** dreada Previamente en AWS
+
+ - **Python-dotenv**
+
 
 
 ---
 
-## Desgloce del contenido de los Scripts
+## Desgloce del Contenido de los Scripts
 
 ### backup_setuid.sh
 
@@ -39,9 +56,7 @@
 
 Este script tiene como objetivo crear un bucket en S3 y subir un archivo generado previamente por el script anterior.
 
-- **Bloque 1:** Realiza la validacion de los parametros que deben ser ingresados (ambos numeros de estudiante y el archivo generado previamente).
-    
-    Se controla tanto el ingreso de 3 parametros como el tipo de dato ingresado
+- **Bloque 1:** Realiza la validacion de los parametros que deben ser ingresados (ambos numeros de estudiante y el archivo generado previamente). Verifica que el archivo exista en el sistema.
 
 - **Bloque 2:**
 
