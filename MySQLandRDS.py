@@ -3,9 +3,13 @@
 import boto3
 import time
 import sys
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ------------------ BLOQUE 1: Creacion de instancia EC2 ------------------
-ec2 = boto3.resource('ec2')
+ec2 = boto3.resource('ec2', region_name=os.getenv('AWS_REGION'))
 
 install_SQL = '''#!/bin/bash
 sudo apt update
@@ -21,7 +25,7 @@ try:
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
-        KeyName='DevOps_Sysadmin',
+        KeyName=os.getenv('KEY_NAME'),  # Nombre de la clave SSH
         SecurityGroups=['DevOps_Obligatorio'], 
         TagSpecifications=[{
             'ResourceType': 'instance',
@@ -39,7 +43,8 @@ except Exception as e:
     sys.exit(1)
 
 # ------------------ BLOQUE 2: Creacion de base de datos RDS ------------------
-rds = boto3.client('rds')
+
+rds = boto3.client('rds', region_name=os.getenv('AWS_REGION'))
 
 try:
     print("Creando instancia RDS...")

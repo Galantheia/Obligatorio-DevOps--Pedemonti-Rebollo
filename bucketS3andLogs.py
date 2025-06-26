@@ -4,6 +4,9 @@ import boto3
 import os
 import sys
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ------------------ BLOQUE 1: Validacion de parámetros ------------------
 
@@ -22,10 +25,11 @@ if not os.path.isfile(archivo_log):
 # ------------------ BLOQUE 2: Creacion de bucket ------------------
 
 s3 = boto3.client('s3')
-bucket_name = f"el-maligno-{nro1}-{nro2}".lower()
+bucket_prefix = os.getenv('BUCKET_PREFIX')
+bucket_name = f"{bucket_prefix}-{nro1}-{nro2}".lower()
 
 try:
-    region = boto3.session.Session().region_name
+    region = os.getenv('AWS_REGION')
     s3.create_bucket(
         Bucket=bucket_name,
         CreateBucketConfiguration={'LocationConstraint': region}
