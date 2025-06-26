@@ -20,6 +20,8 @@ Esto busca desde la raíz (/), genera un log y solo incluye scripts de Bash con 
 
 El resultado será un archivo .tar.gz con los archivos encontrados y el archivo de log.
 
+![image](https://github.com/user-attachments/assets/a5e74a1e-5042-4c99-ab17-8a2757ea47cb)
+
 ## Requisitos
 
 - Bash
