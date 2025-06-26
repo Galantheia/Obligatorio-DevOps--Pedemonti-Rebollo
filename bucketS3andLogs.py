@@ -22,7 +22,7 @@ if len(sys.argv) != 3:
 nro1 = sys.argv[1]
 nro2 = sys.argv[2]
 
-backups = glob.glob('Backups*')
+backups = glob.glob('Logs*')
 
 if not backups:
     print("No se encontraron archivos que comiencen con 'Backups'.", file=sys.stderr)
