@@ -44,7 +44,7 @@ try:
         MaxCount=1,
         InstanceType='t2.micro',
         KeyName=os.getenv('KEY_NAME'),
-        SecurityGroups=[os.getenv('DevOps_Obligatorio')],
+        SecurityGroups=['DevOps_Obligatorio'],
         TagSpecifications=[{
             'ResourceType': 'instance',
             'Tags': [{'Key': 'Name', 'Value': 'Maligno-SRV'}]
