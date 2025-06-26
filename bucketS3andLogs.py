@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv( ".env " )
 
 # ------------------ BLOQUE 1: Validacion de parámetros ------------------
 
@@ -27,16 +27,19 @@ if not os.path.isfile(archivo_log):
 s3 = boto3.client('s3')
 bucket_prefix = os.getenv('BUCKET_PREFIX')
 bucket_name = f"{bucket_prefix}-{nro1}-{nro2}".lower()
+region = 'us-east-1'
 
 try:
-    region = os.getenv('AWS_REGION')
-    s3.create_bucket(
-        Bucket=bucket_name,
-        CreateBucketConfiguration={'LocationConstraint': region}
-    )
-    print(f"El bucket ' {bucket_name} ' ha sido creado en la region ' {region} '.")
+    if region == 'us-east-1':
+        s3.create_bucket(Bucket=bucket_name)
+    else:
+        s3.create_bucket(
+            Bucket=bucket_name,
+            CreateBucketConfiguration={'LocationConstraint': region}
+        )
+    print(f"El bucket '{bucket_name}' ha sido creado en la region '{region}'.")
 except s3.exceptions.BucketAlreadyOwnedByYou:
-    print(f"El bucket ' {bucket_name} ' ya existe. Continuando...")
+    print(f"El bucket '{bucket_name}' ya existe. Continuando...")
 except Exception as e:
     print(f"Error en la creacion el bucket: {e}", file=sys.stderr)
     sys.exit(3)
