@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import boto3
-import glob
-import os
+import time
 import sys
-from datetime import datetime
+import os
+import base64
+import mysql.connector
 from dotenv import load_dotenv
 
 load_dotenv(".env")
