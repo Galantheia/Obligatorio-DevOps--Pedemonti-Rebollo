@@ -64,4 +64,3 @@ try:
 except Exception as e:
     print(f"Error al subir el archivo: {e}", file=sys.stderr)
     sys.exit(4)
-
