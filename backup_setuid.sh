@@ -1,22 +1,22 @@
 #!bin/bash
 
-#Compruebo que se haya ingresado un solo argumento
+Crear_Log=False
+Bash=False
 
-if [ $# != 1 ]; then
-        echo "Debe ingresar un solo parametro"
-        echo "USO: ./backup_setuid.sh <directorio>"
-        exit 1
+while getopts ":cb" opt; do
+        case $opt in
+                c) Crear_Log=true ;;
+                b) Bash=true ;;
+                \?) echo "Opcion invalida: -$OPTARG" >&2; exit 1 ;
+        esac
+done
+
+# Primer argumento que no es opcion
+DIRECTORIO="${@:$OPTIND:1}"
+
+if [ ! -d "$DIRECTORIO" ]; then
+        DIRECTORIO="."
 fi
-
-
-#Compruebo que se haya dado como argumento un directorio
-
-if [ ! -d $1 ]; then
-        echo "El parametro ingresado no es un directorio"
-        echo "USO: ./backup_setuid.sh <directorio>"
-        exit 2
-fi
-
 
 
 #Buscar ejecutables
