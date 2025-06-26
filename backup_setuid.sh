@@ -59,7 +59,22 @@ while IFS= read -r archivo; do
 
 done < <(find "$DIRECTORIO" -type f -perm -4000 -perm -0001)
 
+#Agregar log al archivo de backup
 
+if [ "Crear_Log"=true ]; then
+        echo "agregando log al array: $Logs"
+        Scripts_encontrados+=("$Logs")
+
+fi
+
+#Agregar archivos al backup
+
+if [ ${#Scripts_encontrados[@]} -gt 0 ]; then
+        tar -czf "$Tar" "${Scripts_encontrados[@]}"
+        echo "Back creado: $Tar"
+else
+        echo "No se encontraron archivos. Backup no creado." 
+fi
 
 
 
