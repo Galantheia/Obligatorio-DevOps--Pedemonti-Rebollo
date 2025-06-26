@@ -18,6 +18,11 @@ if [ ! -d "$DIRECTORIO" ]; then
         DIRECTORIO="."
 fi
 
+#Chequeo de opciones y argumento
+
+echo "Directorio: $DIRECTORIO"
+echo "Crear_Log: $Crear_Log"
+echo "Bash: $Bash"
 
 #Buscar ejecutables
 
