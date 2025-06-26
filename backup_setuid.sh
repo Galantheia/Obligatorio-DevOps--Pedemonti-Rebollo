@@ -29,17 +29,21 @@ Fecha=$(date +"%m-%d-%y_%H-%M-%S")
 Logs="Logs_Caminos_${Fecha}.rep"
 Tar="Backups_${Fecha}.tar.gz"
 
+#Archivo log
 
+if [ "$Crear_Log"=true ]; then
+        if [ "$Bash"=true ]; then
+                echo "Caminos a los scripts encontrados solo de bash:" > "$Logs"
+        else
+                echo "Caminos a los scripts encontrados:" > "$Logs"
+        fi
+fi
 
-#Buscar ejecutables
+#Inicializacion de array
 
+Scripts_encotrados=()
 
-#find "$DIRECTORIO" -type f -perm -4000 -perm -0001 | while read -r archivo; do
-#        echo "Analizando archivo: $archivo"
-#        if head -n 1 "$archivo" | grep -qE '^#!'; then
-#               echo "script encontrado: $archivo"
-#        fi
-#done
+#Buscar ejecutables y guardarlos en array
 
 
 while IFS= read -r archivo; do
@@ -54,5 +58,38 @@ while IFS= read -r archivo; do
         Scripts_encontrados+=("$archivo")
 
 done < <(find "$DIRECTORIO" -type f -perm -4000 -perm -0001)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
