@@ -14,6 +14,7 @@ os.environ['AWS_SECRET_ACCESS_KEY'] = os.getenv('AWS_SECRET_ACCESS_KEY')
 os.environ['AWS_SESSION_TOKEN'] = os.getenv('AWS_SESSION_TOKEN')
 
 # ------------------ BLOQUE 1: Creacion de instancia EC2 ------------------
+# ------------------ BLOQUE 1: Creacion de instancia EC2 ------------------
 ec2 = boto3.resource('ec2', region_name=os.getenv('AWS_DEFAULT_REGION'))
 
 try:
@@ -29,19 +30,10 @@ install_SQL = f'''#!/bin/bash
 set -e
 
 sudo yum update -y
-sudo yum install -y mariadb105-server-utils.x86_64
 sudo yum install -y mariadb
 
-
-systemctl start mariadb
-systemctl enable 
-
-echo "{sql_b64}" | base64 -d > /tmp/init.sql
-
-# Esperar unos segundos para que mysql esté listo
-sleep 10
-
-mysql -u root < /tmp/init.sql
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
 '''
 
 try:
@@ -51,8 +43,8 @@ try:
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
-        KeyName=os.getenv('KEY_NAME'),  # Nombre de la clave SSH
-        SecurityGroups=['DevOps_Obligatorio'], 
+        KeyName=os.getenv('KEY_NAME'),
+        SecurityGroups=[os.getenv('DevOps_Obligatorio')],
         TagSpecifications=[{
             'ResourceType': 'instance',
             'Tags': [{'Key': 'Name', 'Value': 'Maligno-SRV'}]
@@ -83,7 +75,10 @@ try:
         MasterUsername='sysadmin',
         MasterUserPassword='sysadmin',
         BackupRetentionPeriod=7,
-        PubliclyAccessible=True
+        PubliclyAccessible=True,
+        VpcSecurityGroupIds=[
+                'sg-0410bc391773c4334'
+    ]
     )
 
     waiter = rds.get_waiter('db_instance_available')
@@ -94,3 +89,40 @@ try:
 except Exception as e:
     print(f"Error al crear instancia RDS: {e}", file=sys.stderr)
     sys.exit(2)
+
+# ------------------ BLOQUE 3: Ejecutar obli.sql en RDS ------------------
+
+
+try:
+    rds_description = rds.describe_db_instances(DBInstanceIdentifier='Maligno-DB')
+    rds_endpoint = rds_description['DBInstances'][0]['Endpoint']['Address']
+    print(f"Endpoint de RDS: {rds_endpoint}")
+
+    print("Esperando 180 segundos adicionales para garantizar que RDS responda...")
+    time.sleep(180)
+
+    with open('obli.sql', 'r') as f:
+        sql_commands = f.read()
+
+    print("Conectando al RDS y ejecutando el script...")
+    conn = mysql.connector.connect(
+        host=rds_endpoint,
+        user='sysadmin',
+        password='sysadmin',
+        database='malignodb'
+    )
+
+    cursor = conn.cursor()
+
+    for statement in sql_commands.strip().split(';'):
+        if statement.strip():
+            cursor.execute(statement + ';')
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+    print("Script SQL ejecutado exitosamente en el RDS.")
+
+except Exception as e:
+    print(f"Error al ejecutar el script en el RDS: {e}", file=sys.stderr)
+    sys.exit(3)
