@@ -14,8 +14,13 @@ done
 # Primer argumento que no es opcion
 DIRECTORIO="${@:$OPTIND:1}"
 
-if [ ! -d "$DIRECTORIO" ]; then
+if [ -z "$DIRECTORIO" ]; then
         DIRECTORIO="."
+fi
+
+if [ ! -d "$DIRECTORIO" ]; then
+	echo "Error: '$DIRECTORIO' no es un directorio valido" >&2
+	exit 2
 fi
 
 #Chequeo de opciones y argumento
