@@ -28,20 +28,26 @@ sql_b64 = base64.b64encode(sql_content.encode('utf-8')).decode('utf-8')
 install_SQL = f'''#!/bin/bash
 set -e
 
-yum update -y
-yum install -y mysql-server
+sudo yum update -y
+sudo yum install -y mariadb105-server-utils.x86_64
+sudo yum install -y mariadb
 
-systemctl start mysqld
-systemctl enable mysqld
+
+systemctl start mariadb
+systemctl enable 
 
 echo "{sql_b64}" | base64 -d > /tmp/init.sql
+
+# Esperar unos segundos para que mysql esté listo
+sleep 10
+
 mysql -u root < /tmp/init.sql
 '''
 
 try:
     print("Lanzando instancia EC2...")
     instance = ec2.create_instances(
-        ImageId='ami-0c02fb55956c7d316',  # AMI Publica de Ubuntu [Server 22.04 LTS (us-east-1)]
+        ImageId='ami-09e6f87a47903347c',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -88,4 +94,3 @@ try:
 except Exception as e:
     print(f"Error al crear instancia RDS: {e}", file=sys.stderr)
     sys.exit(2)
-
