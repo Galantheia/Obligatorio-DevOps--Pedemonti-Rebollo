@@ -4,6 +4,7 @@ import boto3
 import time
 import sys
 import os
+import base64
 from dotenv import load_dotenv
 
 load_dotenv(".env")
@@ -22,15 +23,19 @@ except Exception as e:
     print(f"Error al leer obli.sql: {e}", file=sys.stderr)
     sys.exit(1)
 
-install_SQL = f'''#!/bin/bash
-sudo apt update
-sudo apt install -y mysql-server
-sudo systemctl start mysql
-sudo systemctl enable mysql
+sql_b64 = base64.b64encode(sql_content.encode('utf-8')).decode('utf-8')
 
-mysql -u root <<EOF
-{sql_content}
-EOF
+install_SQL = f'''#!/bin/bash
+set -e
+
+yum update -y
+yum install -y mysql-server
+
+systemctl start mysqld
+systemctl enable mysqld
+
+echo "{sql_b64}" | base64 -d > /tmp/init.sql
+mysql -u root < /tmp/init.sql
 '''
 
 try:
