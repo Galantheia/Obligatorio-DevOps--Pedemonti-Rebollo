@@ -6,10 +6,14 @@ import sys
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(".env")
+
+os.environ['AWS_ACCESS_KEY_ID'] = os.getenv('AWS_ACCESS_KEY_ID')
+os.environ['AWS_SECRET_ACCESS_KEY'] = os.getenv('AWS_SECRET_ACCESS_KEY')
+os.environ['AWS_SESSION_TOKEN'] = os.getenv('AWS_SESSION_TOKEN')
 
 # ------------------ BLOQUE 1: Creacion de instancia EC2 ------------------
-ec2 = boto3.resource('ec2', region_name=os.getenv('AWS_REGION'))
+ec2 = boto3.resource('ec2', region_name=os.getenv('AWS_DEFAULT_REGION'))
 
 install_SQL = '''#!/bin/bash
 sudo apt update

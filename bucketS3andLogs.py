@@ -6,7 +6,11 @@ import sys
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv( ".env " )
+load_dotenv(".env")
+
+os.environ['AWS_ACCESS_KEY_ID'] = os.getenv('AWS_ACCESS_KEY_ID')
+os.environ['AWS_SECRET_ACCESS_KEY'] = os.getenv('AWS_SECRET_ACCESS_KEY')
+os.environ['AWS_SESSION_TOKEN'] = os.getenv('AWS_SESSION_TOKEN')
 
 # ------------------ BLOQUE 1: Validacion de parámetros ------------------
 
@@ -27,7 +31,7 @@ if not os.path.isfile(archivo_log):
 s3 = boto3.client('s3')
 bucket_prefix = os.getenv('BUCKET_PREFIX')
 bucket_name = f"{bucket_prefix}-{nro1}-{nro2}".lower()
-region = 'us-east-1'
+region = os.getenv('AWS_DEFAULT_REGION')
 
 try:
     if region == 'us-east-1':
