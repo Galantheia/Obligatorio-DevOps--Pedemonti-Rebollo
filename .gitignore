@@ -1,0 +1,7 @@
+# |Entornos Virtuales|
+.venv/
+
+# |Archivos de Permisos y Configuracion|
+DevOps_Sysadmin.pem
+.env
+
